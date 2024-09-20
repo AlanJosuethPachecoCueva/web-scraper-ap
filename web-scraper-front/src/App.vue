@@ -68,7 +68,7 @@ export default {
       })
         .then((response) => {
           let res = response.data;
-          console.log("response api: ", res); // Muestra los datos de la respuesta
+          console.log("response api: ", res);
           this.news = res;
           this.originalNews = res;
           this.dataLoaded = true;
@@ -136,7 +136,6 @@ body {
 }
 
 #top {
-  /* background-color: gray; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -160,7 +159,6 @@ body {
 
 #bottom {
   display: flex;
-  /* background-color: blue; */
 
   justify-content: center;
 
