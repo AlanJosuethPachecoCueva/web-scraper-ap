@@ -4,10 +4,12 @@
       <img alt="Vue logo" src="./assets/logo.png">
       <div id="options">
 
-        <input class="btn" type="button" value="Filter <=5 words and order by points" v-on:click="filterAndSortByPoints()">
+        <input class="btn" type="button" value="Filter <=5 words and order by points"
+          v-on:click="filterAndSortByPoints()">
         <input class="btn" type="button" value="Get Data" v-on:click="getWebsiteData()">
+        <input class="btn" type="button" value="Clear Filter" v-on:click="clearFilter()">
         <input class="btn" type="button" value="Filter >5 words and order by number of comments"
-          v-on:click="filterAndSort()">
+          v-on:click="filterAndSortByComments()">
 
       </div>
 
@@ -50,15 +52,16 @@ export default {
   data() {
     return {
       news: [],
-      dataLoaded: false
+      dataLoaded: false,
+      originalNews: [],
     }
   },
   methods: {
     getWebsiteData() {
       let scrapeUrl = "https://news.ycombinator.com";
-      //let scrapeUrl ="https://www.msn.com/";
+      let apiUrl = "http://localhost:3000/api/scrape";
 
-      axios.get(`http://localhost:3000/api/scrape`, {
+      axios.get(apiUrl, {
         params: {
           url: scrapeUrl // Pasamos la URL como parámetro
         }
@@ -67,7 +70,7 @@ export default {
           let res = response.data;
           console.log("response api: ", res); // Muestra los datos de la respuesta
           this.news = res;
-
+          this.originalNews = res;
           this.dataLoaded = true;
         })
         .catch((error) => {
@@ -77,7 +80,8 @@ export default {
 
     },
 
-    filterAndSort() {
+    filterAndSortByComments() {
+      this.news = this.originalNews;
       console.log("filter by comments")
 
       this.news = this.news.filter(entry => {
@@ -91,6 +95,7 @@ export default {
         });
     },
     filterAndSortByPoints() {
+      this.news = this.originalNews;
       console.log("filter by points")
       this.news = this.news.filter(entry => {
         const wordCount = entry.title.split(/\s+/).filter(word => word.trim()).length;
@@ -100,9 +105,10 @@ export default {
         .sort((a, b) => {
           return parseInt(b.score) - parseInt(a.score);
         });
+    },
+    clearFilter() {
+      this.news = this.originalNews;
     }
-
-
   },
   created() {
   }
@@ -143,7 +149,7 @@ body {
 
 #options {
   display: flex;
-  width: 50%;
+  width: 60%;
   background-color: rgba(198, 202, 202, 0.5);
   justify-content: space-around;
   margin: 30px;
